@@ -1,14 +1,11 @@
-# Librerias requeridas
-
 install.packages("easypackages")        # libreria easypackages usada para la verificación, instalación y carga de librerias.
-library("easypackages")
+library("easypackages") # Carga de la libreria easypackages
 
 lib_req<-c("lubridate","dplyr","visdat","missMDA","mice","DMwR2","editrules", "corrplot", "readxl", "ggplot2", "scales", "ggpubr")# Listado de librerias requeridas por el script
 easypackages::packages(lib_req)         # Verificación, instalación y carga de librerias.
 
-# Lectura del excel la tabla de paises y carga a datos.
 
-Datos <- read_excel("paises.xls")
+Datos <- read_excel("paises.xls") # Lectura del archivo de datos en este caso un excel llamado paises.xls
 View(Datos)
 
 
@@ -16,42 +13,40 @@ str(Datos)
 summary(Datos)
 
 # Reemplazo de los carateres que pueden generar conflicto a la hora de leer las variables dentro de la tabla
-Datos$GRUPOS <- gsub("\\s",'_',Datos$GRUPOS) 
-Datos$GRUPOS <- gsub("-",'_',Datos$GRUPOS) 
-Datos$País <- gsub("\\s", "_", Datos$País)
+Datos$GRUPOS <- gsub("\\s",'_',Datos$GRUPOS)  # Reemplazo de los espacios en blanco por guiones bajos de la variable GRUPOS
+Datos$GRUPOS <- gsub("-",'_',Datos$GRUPOS) # Reemplazo de los guiones por guiones bajos de la variable GRUPOS
+Datos$País <- gsub("\\s", "_", Datos$País) # Reemplazo de los espacios en blanco por guiones bajos de la variable País
 
 
 
 
 # Observacion de las etiquetas de los grupos para identificar las mal escritas
-table (Datos$GRUPOS)
+table (Datos$GRUPOS) # Tabla de frecuencias de la variable GRUPOS
 
-# Declaracion de los niveles correctos para las variables
+# Corrección de las etiquetas de los grupos para mostrar los niveles correctos
 level_GRUPOS <- c(africa="AFRICA", Africa="AFRICA", AFRICA="AFRICA", asia="ASIA", Asia="ASIA", ASIA="ASIA", EO_NA_JAPON_AUST_NZ="EO_NA_JAPON",
                   Europa_Oriental="EUROPA_ORIENTAL", EUROPA_ORIENTAL="EUROPA_ORIENTAL", iberoamerica="IBEROAMERICA", Iberoamerica="IBEROAMERICA",
                   IBEROAMERICA="IBEROAMERICA", Oriente_Medio="ORIENTE_MEDIO")
 
-# Modificación del formato y transformación de variables
+# Actualizacion del factor de la variable GRUPOS
 Datos <- transform(Datos,
                    GRUPOS=factor(dplyr::recode(GRUPOS, !!!level_GRUPOS)))
 
-str(Datos)
-summary(Datos)
+str(Datos) # Verificación de la estructura de los datos
+summary(Datos) # Retificacion de los valores de las variables
 
 
-#----------------------------------------------------------------------#
-####    Validación de reglas de consistencia en los datos - editrules   ####
-#----------------------------------------------------------------------#
-
+# EN ESTE APARTADO SE REALIZA LA VALIDACION DE LAS REGLAS DE CONSISTENCIA DE LOS DATOS
 
 # Carga del archivo de reglas de validación
-Rules <- editrules::editfile("Consistencia.txt")
+Rules <- editrules::editfile("Consistencia.txt") 
 Rules 
 
-# Conexión entre las  reglas
-windows();plot(Rules)
+# Visualización de las reglas de validación
+windows();plot(Rules) # significa que no hay violaciones de las reglas de validación
 
-# Verificación de las reglas sobres los datos
+# Verificación de las reglas sobres los datos  Esta parte se puede omitir ya que no hay violaciones de las reglas de validación
+# es mas por estética *-* 
 editrules::violatedEdits(Rules, Datos)
 Valid_Data = editrules::violatedEdits(Rules, Datos)
 summary(Valid_Data)
@@ -59,18 +54,21 @@ summary(Valid_Data)
 # Visualización del diagnóstico
 windows();plot(Valid_Data)
 
+# FIN DEL APARTADO DE VALIDACION DE LAS REGLAS DE CONSISTENCIA DE LOS DATOS QUE PUEDES OMITIR
 
-#------------------------------------------------------------------------#
-#### Identificación y cuantificación de datos faltantes                  ####
-#------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------
+
+# EN ESTE APARTADO SE ENCUENTRA LAS FUNCION QUE PERMITE IDENTIFICAR LOS DATOS FALTANTES EN LA BASE DE DATOS
 
 # Identificion los datos NA o faltantes
-View(Datos)
-is.na(Datos)
+View(Datos) # Visualización de los datos
+is.na(Datos) # Identificación de los datos NA o faltantes y los muestra como TRUE o FALSE
 
 # Visualizacion de los datos
-x11()
-visdat::vis_miss(Datos) 
+x11() # Abre una ventana para visualizar los datos faltantes
+visdat::vis_miss(Datos) # Visualización de los datos faltantes en la base de datos en forma de gráfica de barras
+
+AQUI VOY !!!
 
 # Función que evalua e identifica los datos faltantes por variable e individuo.
 
