@@ -68,8 +68,6 @@ is.na(Datos) # Identificación de los datos NA o faltantes y los muestra como TR
 x11() # Abre una ventana para visualizar los datos faltantes
 visdat::vis_miss(Datos) # Visualización de los datos faltantes en la base de datos en forma de gráfica de barras
 
-AQUI VOY !!!
-
 # Función que evalua e identifica los datos faltantes por variable e individuo.
 
 miss<-function(Datos,plot=T){  
@@ -108,8 +106,8 @@ miss<-function(Datos,plot=T){
 }
 
 Summary.NA = miss(Datos) # Asignacion de la funcion a una lista
-
-attach(Datos)
+ 
+attach(Datos)  # Permite acceder a las variables de la base de datos sin necesidad de escribir el nombre de la base de datos
 
 Visualizar.AQ= function(Datos){   #Una función para visualizar los datos AQ
   with(Datos,{
