@@ -18,8 +18,6 @@ Datos$GRUPOS <- gsub("-",'_',Datos$GRUPOS) # Reemplazo de los guiones por guione
 Datos$País <- gsub("\\s", "_", Datos$País) # Reemplazo de los espacios en blanco por guiones bajos de la variable País
 
 
-
-
 # Observacion de las etiquetas de los grupos para identificar las mal escritas
 table (Datos$GRUPOS) # Tabla de frecuencias de la variable GRUPOS
 
@@ -66,8 +64,8 @@ View(Datos) # Visualización de los datos
 is.na(Datos) # Identificación de los datos NA o faltantes y los muestra como TRUE o FALSE
 
 # Visualizacion de los datos
-x11() # Abre una ventana para visualizar los datos faltantes
-visdat::vis_miss(Datos) # Visualización de los datos faltantes en la base de datos en forma de gráfica de barras
+x11();visdat::vis_miss(Datos) # Abre una ventana para visualizar los datos faltantes
+#visdat::vis_miss(Datos) # Visualización de los datos faltantes en la base de datos en forma de gráfica de barras
 
 # Función que evalua e identifica los datos faltantes por variable e individuo.
 
@@ -162,8 +160,7 @@ porcentaje = c(percent(sum(Datos$Grupo == 1) / nrow(Datos), accuracy = 0.01),per
 Reg = c("Europa Oriental", "Iberoamerica", "EO_NA_JAPON_AUSTR_NZ", "Oriente Medio", "Asia", "Africa")
 conformacion.muestra = data.frame(Reg, porcentaje)
 
-x11()
-ggplot(conformacion.muestra, aes(x="", y = porcentaje, fill = Reg)) +
+x11();ggplot(conformacion.muestra, aes(x="", y = porcentaje, fill = Reg)) +
   geom_col(color = c("Red", "Yellow", "Green", "Blue", "Brown", "Orange")) +
   coord_polar("y", start = 0) + 
   geom_text(aes(label = porcentaje), 
@@ -192,8 +189,7 @@ gg3 <- ggplot(Datos, aes(x= GRUPOS, y= Mortalidad.infantil))+
   geom_boxplot()+ 
   ggtitle(label = "Mortalidad infantil por grupos")
 
-x11()
-ggarrange(gg1, gg2, gg3, nrow = 3)
+x11();ggarrange(gg1, gg2, gg3, nrow = 3)
 
 
 #3. Adicion de la columna PNB per capita
@@ -204,14 +200,15 @@ Datos <- dplyr::mutate(Datos,
 
 # Visualizacion de los datos PNB per capita por pais agrupado
 
-x11()
-ggplot(Datos, aes(x = Grupo, y = PNB.per.capita, fill = País))+
+x11();ggplot(Datos, aes(x = Grupo, y = PNB.per.capita, fill = País))+
   geom_col(position = "Dodge")+
   scale_x_continuous(breaks = seq(1, 6, 1))+
   scale_y_continuous(breaks = seq(0, 14000000, 500000))+
   theme(legend.text = element_text(margin = margin(t= 10, b= 10)))+
   scale_fill_discrete(name = "País (PNB per capita)",labels = paste(as.character(Datos$País), " (", as.character(Datos$PNB.per.capita), ")", sep = ""))
 
+#Muestra la nueva tabla
+View(Datos)
 
 #4. Adicion de la clasificacion del PNB per capita
 
