@@ -9,8 +9,8 @@ Datos <- read_excel("paises.xls") # Lectura del archivo de datos en este caso un
 View(Datos)
 
 
-str(Datos)
-summary(Datos)
+str(Datos)  # Verificación de la estructura de los datos
+summary(Datos) # Resumen de los datos
 
 # Reemplazo de los carateres que pueden generar conflicto a la hora de leer las variables dentro de la tabla
 Datos$GRUPOS <- gsub("\\s",'_',Datos$GRUPOS)  # Reemplazo de los espacios en blanco por guiones bajos de la variable GRUPOS
@@ -28,10 +28,11 @@ level_GRUPOS <- c(africa="AFRICA", Africa="AFRICA", AFRICA="AFRICA", asia="ASIA"
                   Europa_Oriental="EUROPA_ORIENTAL", EUROPA_ORIENTAL="EUROPA_ORIENTAL", iberoamerica="IBEROAMERICA", Iberoamerica="IBEROAMERICA",
                   IBEROAMERICA="IBEROAMERICA", Oriente_Medio="ORIENTE_MEDIO")
 
-# Actualizacion del factor de la variable GRUPOS
+# Actualizacion del factor de la variable GRUPOS con los niveles correctos 
 Datos <- transform(Datos,
                    GRUPOS=factor(dplyr::recode(GRUPOS, !!!level_GRUPOS)))
 
+# Se vuelve a observar las etiquetas de los grupos para verificar que se hayan corregido
 str(Datos) # Verificación de la estructura de los datos
 summary(Datos) # Retificacion de los valores de las variables
 
@@ -136,23 +137,23 @@ Visualizar.AQ= function(Datos){   #Una función para visualizar los datos AQ
   })
   
   ## Correlación entre covariables cuantitativas
-  Datos.cuant=Datos[,2:8]
-  AQ.cor = cor(Datos.cuant,method="pearson")
-  print(AQ.cor)
-  windows(height=10,width=15)
-  corrplot::corrplot(AQ.cor, method = "ellipse",addCoef.col = "black",type="upper")
-  windows(height=10,width=15)
-  pairs(Datos.cuant,lower.panel = panel.smooth, pch = 15)
+  Datos.cuant=Datos[,2:8] # Selecciona las variables cuantitativas
+  AQ.cor = cor(Datos.cuant,method="pearson") # Calcula la correlación entre las variables cuantitativas
+  print(AQ.cor) # Imprime la matriz de correlación
+  windows(height=10,width=15) # Abre una ventana para visualizar la matriz de correlación
+  corrplot::corrplot(AQ.cor, method = "ellipse",addCoef.col = "black",type="upper") # Visualiza la matriz de correlación
+  windows(height=10,width=15) # Abre una ventana para visualizar la matriz de correlación
+  pairs(Datos.cuant,lower.panel = panel.smooth, pch = 15) # Visualiza la matriz de correlación
 }
 
 ## Visualización.
-Visualizar.AQ(Datos)
+Visualizar.AQ(Datos)  # Visualiza los datos AQ
 
 
 ## Imputación por regresion.
-ImputR = mice::mice(Datos, maxit = 1,seed = 2018,print=F)
-Datos = mice::complete(ImputR)
-Visualizar.AQ(Datos)
+ImputR = mice::mice(Datos, maxit = 1,seed = 2018,print=F) # Imputación por regresión
+Datos = mice::complete(ImputR) # Asigna los datos imputados a la base de datos original
+Visualizar.AQ(Datos) # Visualiza los datos AQ imputados
 
 
 #1. Visualizacion de Conformacion de la muestra
