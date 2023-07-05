@@ -246,3 +246,131 @@ pl <- ggplot(Frecuencias.PNB.clas, aes(Var1, Freq)) +
   scale_y_continuous(breaks = c(1:30))
 x11()
 pl
+
+# Copiar la tabla de datos H1
+Datos_1 <- Datos
+# hipotesis 1: El PNB per capita promedio es diferente para los paises en diferentes regiones
+# Realizar el test de Kruskal-Wallis para comparar el PNB per cápita entre diferentes regiones
+# H0: El PNB per cápita es igual para todas las regiones
+# H1: El PNB per cápita es diferente para al menos una región
+resultado_kruskal <- kruskal.test(PNB.per.capita ~ GRUPOS, data = Datos_1)
+
+# Imprimir los resultados del test de Kruskal-Wallis
+print(resultado_kruskal)
+
+# Graficar los resultados del test de Kruskal-Wallis en un gráfico de cajas y bigotes
+boxplot(PNB.per.capita ~ GRUPOS, data = Datos_1,
+        main = "Comparación del PNB per cápita entre regiones",
+        xlab = "Regiones",
+        ylab = "PNB per cápita")
+
+# Crear una copia de la tabla de datos H2
+Datos_2 <- Datos
+
+# Hipothesis 2: La tasa de mortalidad es diferente para los paises con diferentes niveles de PNB per capita
+# Recodificar PNB.Capita.Clasificado para que tenga solo dos niveles: BAJO y ALTO
+# H0: La tasa de mortalidad es igual para los paises con diferentes niveles de PNB per capita
+# H1: La tasa de mortalidad es diferente para los paises con diferentes niveles de PNB per capita
+Datos_2$PNB.Capita.Clasificado <- factor(Datos_2$PNB.Capita.Clasificado, levels = c("BAJO", "ALTO"))
+t.test(Mortalidad.infantil ~ PNB.Capita.Clasificado, data = Datos_2)
+
+# Crear el gráfico de barras
+ggplot(Datos_2, aes(x = PNB.Capita.Clasificado, y = Mortalidad.infantil, fill = PNB.Capita.Clasificado)) +
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  labs(x = "PNB por Cápita Clasificado", y = "Mortalidad Infantil Media") +
+  scale_fill_manual(values = c("blue", "red")) +
+  theme_minimal()
+
+
+# Crear una copia de la tabla de datos H3
+Datos_3 <- Datos
+#Hipotesis 3: La tasa de mortalidad es diferente para los paises con diferentes niveles de PNB per capita
+# Recodificar PNB.Capita.Clasificado para que tenga solo dos niveles: MEDIO ALTO y MEDIO BAJO
+# H0: La tasa de mortalidad es igual para los paises con diferentes niveles de PNB per capita
+# H1: La tasa de mortalidad es diferente para los paises con diferentes niveles de PNB per capita
+Datos_3$PNB.Capita.Clasificado <- factor(Datos_3$PNB.Capita.Clasificado, levels = c("MEDIO ALTO", "MEDIO BAJO"))
+t.test(Mortalidad.infantil ~ PNB.Capita.Clasificado, data = Datos_3)
+
+# Crear el gráfico de barras
+ggplot(Datos_3, aes(x = PNB.Capita.Clasificado, y = Mortalidad.infantil, fill = PNB.Capita.Clasificado)) +
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  labs(x = "PNB por Cápita Clasificado", y = "Mortalidad Infantil Media") +
+  scale_fill_manual(values = c("blue", "red")) +
+  theme_minimal()
+
+# TABLAS EXTRAS 
+#Por grupo de pais mostrar la natalidad y mortalidad * pnb
+# Gráfico de dispersión de Natalidad y PNB por grupo de país
+ggplot(data = Datos, aes(x = Tasa.natalidad, y = PNB.per.capita, color = GRUPOS)) +
+  geom_line() +
+  labs(x = "Natalidad", y = "PNB per cápita", color = "Grupo de país") +
+  theme_minimal() +
+  ggtitle("Gráfico de dispersión de Natalidad y PNB por grupo de país")
+
+# Gráfico de dispersión de Mortalidad y PNB por grupo de país
+ggplot(data = Datos, aes(x = Tasa.mortalidad, y = PNB.per.capita, color = GRUPOS)) +
+  geom_line() +
+  labs(x = "Mortalidad", y = "PNB per cápita", color = "Grupo de país") +
+  theme_minimal() +
+  ggtitle("Gráfico de dispersión de Mortalidad y PNB por grupo de país")
+
+# Gráfico de barras apiladas de Esperanza de vida por grupo de país y género
+ggplot(data = Datos, aes(x = GRUPOS)) +
+  geom_bar(aes(y = Esperanza.vida.hombre, fill = "Hombres"), stat = "identity", width = 0.5) +
+  geom_bar(aes(y = Esperanza.vida.mujer, fill = "Mujeres"), stat = "identity", width = 0.5) +
+  labs(x = "Grupo de país", y = "Esperanza de vida", fill = "Género") +
+  scale_fill_manual(values = c("Hombres" = "steelblue", "Mujeres" = "pink")) +
+  theme_minimal()
+
+# Gráfico de dispersión de Tasa de Natalidad vs Tasa de Mortalidad
+ggplot(data = Datos, aes(x = Tasa.natalidad, y = Tasa.mortalidad)) +
+  geom_point() +
+  labs(x = "Tasa de Natalidad", y = "Tasa de Mortalidad") +
+  theme_minimal()
+
+# Gráfico de dispersión de Mortalidad Infantil vs Tasa de Mortalidad
+ggplot(data = Datos_1, aes(x = Mortalidad.infantil, y = Tasa.mortalidad)) +
+  geom_point() +
+  labs(x = "Mortalidad Infantil", y = "Tasa de Mortalidad") +
+  theme_minimal()
+
+# Gráfico de dispersión de Mortalidad Infantil vs Población en miles
+ggplot(data = Datos_1, aes(x = Mortalidad.infantil, y = Población..miles.)) +
+  geom_point() +
+  labs(x = "Mortalidad Infantil", y = "Población (miles)") +
+  theme_minimal()
+
+# Calcular el promedio por grupos clasificados
+promedios <- aggregate(PNB.per.capita ~ GRUPOS, data = Datos, FUN = mean)
+
+# Gráfico de barras del promedio por grupos clasificados
+ggplot(data = promedios, aes(x = GRUPOS, y = PNB.per.capita)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(x = "Grupos clasificados", y = "PNB per cápita promedio") +
+  theme_minimal()
+
+# Que pais tiene una mejor calidad de vida (tasa natalidad - mortalidad)
+# Calcular la diferencia entre la tasa de natalidad y la tasa de mortalidad
+Datos$CalidadVida <- Datos$Tasa.natalidad - Datos$Tasa.mortalidad
+
+# Obtener el país con la mejor calidad de vida
+mejorPais <- Datos$País[which.max(Datos$CalidadVida)]
+
+# Imprimir el país con la mejor calidad de vida
+print(paste("El país con mejor calidad de vida es:", mejorPais))
+
+# Crear un gráfico de barras de la diferencia de calidad de vida por país
+barplot(Datos$CalidadVida, names.arg = Datos_1$País, xlab = "País", ylab = "Diferencia de calidad de vida",
+        main = "Diferencia de calidad de vida por país") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Calcular el intervalo de confianza para PNB.per.capita
+result <- t.test(Datos$PNB.per.capita)
+confidence_interval <- result$conf.int
+
+# Imprimir el intervalo de confianza
+print(paste("Intervalo de confianza (95%) para PNB.per.capita:", confidence_interval))
+
+#                                    FIN  
+
