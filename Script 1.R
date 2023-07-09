@@ -441,16 +441,16 @@ ggplot(data = datos_filtrados, aes(x = PNB.per.capita, y = Tasa.mortalidad, colo
   labs(x = "PNB.per.capita", y = "Tasa de Mortalidad", color = "País") +
   theme_minimal()
 
-# TASA DE NATALIDA VS POBLACION filtrada por grupo de pais == AFRICA
+# TASA DE Tasa.mortalidad VS POBLACION filtrada por grupo de pais == AFRICA
 datos_filtrados <- subset(Datos, GRUPOS == "AFRICA")
 
-ggplot(data = datos_filtrados, aes(x = Población..miles., y = Tasa.natalidad, color = País)) +
+ggplot(data = datos_filtrados, aes(x = Población..miles., y = Tasa.mortalidad, color = País)) +
   geom_point() +
-  labs(x = "Población (miles)", y = "Tasa de Natalidad", color = "País") +
+  labs(x = "Población (miles)", y = "Tasa de Mortalidad", color = "País") +
   theme_minimal()
 
 # Calcular el intervalo de confianza para PNB.per.capita
-result <- t.test(Datos$PNB.per.capita)
+result <- t.test(datos_filtrados$PNB.per.capita)
 confidence_interval <- result$conf.int
 
 # Imprimir el intervalo de confianza
