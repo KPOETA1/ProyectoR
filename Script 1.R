@@ -264,7 +264,7 @@ pl <- ggplot(Frecuencias.PNB.clas, aes(Var1, Freq, fill = Var1)) +
   scale_y_continuous(breaks = c(1:30)) +
   scale_fill_discrete(guide = FALSE);x11(); pl
 
-# Mostrar el gráfico con barras de colores independientes
+############### AREA DE HIPOTESIS #####################
 
 # Copiar la tabla de datos H1
 Datos_1 <- Datos
@@ -301,21 +301,32 @@ ggplot(Datos_2, aes(x = PNB.Capita.Clasificado, y = Mortalidad.infantil, fill = 
   theme_minimal()
 
 
-# Crear una copia de la tabla de datos H3
-Datos_3 <- Datos
-#Hipotesis 3: La tasa de mortalidad es diferente para los paises con diferentes niveles de PNB per capita
-# Recodificar PNB.Capita.Clasificado para que tenga solo dos niveles: MEDIO ALTO y MEDIO BAJO
-# H0: La tasa de mortalidad es igual para los paises con diferentes niveles de PNB per capita
-# H1: La tasa de mortalidad es diferente para los paises con diferentes niveles de PNB per capita
-Datos_3$PNB.Capita.Clasificado <- factor(Datos_3$PNB.Capita.Clasificado, levels = c("MEDIO ALTO", "MEDIO BAJO"))
-t.test(Mortalidad.infantil ~ PNB.Capita.Clasificado, data = Datos_3)
+# OTRA PRUEBA
+# agrupar todos los datos por grupo y guardar en variable
+datos_3 <- Datos %>% group_by(GRUPOS) %>% summarise(Tasa.natalidad = mean(Tasa.natalidad), Tasa.mortalidad = mean(Tasa.mortalidad), PNB.per.capita = mean(PNB.per.capita),Mortalidad.infantil = mean(Mortalidad.infantil), Esperanza.hombre = mean(Esperanza.vida.hombre), Esperanza.mujer = mean(Esperanza.vida.mujer), Poblacion = mean(Población..miles.))
+show(datos_3)
+datos_4 <- Datos
+# Grupo pais con mayor tasa de mortalidad
+mortalidad_max <- datos_3 %>% filter(Tasa.mortalidad == max(Tasa.mortalidad))
+show(mortalidad_max)
 
-# Crear el gráfico de barras
-ggplot(Datos_3, aes(x = PNB.Capita.Clasificado, y = Mortalidad.infantil, fill = PNB.Capita.Clasificado)) +
-  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
-  labs(x = "PNB por Cápita Clasificado", y = "Mortalidad Infantil Media") +
-  scale_fill_manual(values = c("blue", "red")) +
-  theme_minimal()
+# Grupo pais con menor tasa de mortalidad
+mortalidad_min <- datos_3 %>% filter(Tasa.mortalidad == min(Tasa.mortalidad))
+show(mortalidad_min)
+
+# Hipotesis diferencia entre la tasa de mortalidad entre los paises con mayor y menor tasa de mortalidad
+# H0: no hay una diferencia significativa entre los paises con mayor y menor tasa de mortalidad
+# H1: hay una diferencia significativa entre los paises con mayor y menor tasa de mortalidad
+
+# Toma la media de la tasa de mortalidad del grupo de pais AFRICA y la compara con la media de la tasa de mortalidad del grupo de pais ORIENTE_MEDIO EN un test de hipotesis
+t.test(datos_4$Tasa.mortalidad[datos_4$GRUPOS == "AFRICA"], datos_4$Tasa.mortalidad[datos_4$GRUPOS == "ORIENTE_MEDIO"])
+
+
+# Imprimir los resultados
+print(result)
+
+
+
 
 # TABLAS EXTRAS 
 #Por grupo de pais mostrar la natalidad y mortalidad * pnb
