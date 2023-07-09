@@ -301,8 +301,8 @@ ggplot(Datos_2, aes(x = PNB.Capita.Clasificado, y = Mortalidad.infantil, fill = 
   theme_minimal()
 
 
-# OTRA PRUEBA
-# agrupar todos los datos por grupo y guardar en variable
+# OTRA PRUEBA: MORTALIDAD
+
 datos_3 <- Datos %>% group_by(GRUPOS) %>% summarise(Tasa.natalidad = mean(Tasa.natalidad), Tasa.mortalidad = mean(Tasa.mortalidad), PNB.per.capita = mean(PNB.per.capita),Mortalidad.infantil = mean(Mortalidad.infantil), Esperanza.hombre = mean(Esperanza.vida.hombre), Esperanza.mujer = mean(Esperanza.vida.mujer), Poblacion = mean(Población..miles.))
 show(datos_3)
 datos_4 <- Datos
@@ -319,14 +319,27 @@ show(mortalidad_min)
 # H1: hay una diferencia significativa entre los paises con mayor y menor tasa de mortalidad
 
 # Toma la media de la tasa de mortalidad del grupo de pais AFRICA y la compara con la media de la tasa de mortalidad del grupo de pais ORIENTE_MEDIO EN un test de hipotesis
-t.test(datos_4$Tasa.mortalidad[datos_4$GRUPOS == "AFRICA"], datos_4$Tasa.mortalidad[datos_4$GRUPOS == "ORIENTE_MEDIO"])
+t.test(datos_4$Tasa.mortalidad[datos_4$GRUPOS == "AFRICA"], datos_4$Tasa.mortalidad[datos_4$GRUPOS == "ORIENTE_MEDIO"], two.sided = TRUE, conf.level = 0.95)
 
+# OTRA PRUEBA:  NATALIDAD
 
-# Imprimir los resultados
-print(result)
+datos_5 <- Datos %>% group_by(GRUPOS) %>% summarise(Tasa.natalidad = mean(Tasa.natalidad), Tasa.mortalidad = mean(Tasa.mortalidad), PNB.per.capita = mean(PNB.per.capita),Mortalidad.infantil = mean(Mortalidad.infantil), Esperanza.hombre = mean(Esperanza.vida.hombre), Esperanza.mujer = mean(Esperanza.vida.mujer), Poblacion = mean(Población..miles.))
+show(datos_5)
+datos_6 <- Datos
+# Grupo pais con mayor tasa de natalidad
+natalidad_max <- datos_5 %>% filter(Tasa.natalidad == max(Tasa.natalidad))
+show(natalidad_max)
 
+# Grupo pais con menor tasa de natalidad
+natalidad_min <- datos_5 %>% filter(Tasa.natalidad == min(Tasa.natalidad))
+show(natalidad_min)
 
+# Hipotesis diferencia entre la tasa de natalidad entre los paises con mayor y menor tasa de natalidad
+# H0: no hay una diferencia significativa entre los paises con mayor y menor tasa de natalidad
+# H1: hay una diferencia significativa entre los paises con mayor y menor tasa de natalidad
 
+# Toma la media de la tasa de natalidad del grupo de pais AFRICA y la compara con la media de la tasa de natalidad del grupo de pais EO_NA_JAPON_AUSTR_NZ EN un test de hipotesis
+t.test(datos_6$Tasa.natalidad[datos_6$GRUPOS == "AFRICA"], datos_6$Tasa.natalidad[datos_6$GRUPOS == "EO_NA_JAPON_AUSTR_NZ"], two.sided = TRUE, conf.level = 0.95)
 
 # TABLAS EXTRAS 
 #Por grupo de pais mostrar la natalidad y mortalidad * pnb

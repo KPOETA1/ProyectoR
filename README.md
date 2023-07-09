@@ -2,14 +2,14 @@
 Uso del Script
 
 ### Se debe tener en Rstudio seteado el espacio de trabajo los archivos escenciales son ###
-1. Consistencia.txt
-2. Script 1.R
-3. Paises.xlx
+*  Consistencia.txt
+* Script 1.R
+* Paises.xlx
 
-Librerias
+# Librerias
 la primera linea del Script es esencial para el uso de la base de datos esta instalar los paquetes necesario luego de hacerlo una vez no hay necesidad de hacerlo mas, las siguientes linas cargan las librerias y verifican que esten instaladas
 
-PAISES.XLS
+# PAISES.XLS
 es un archivo de excel que contiene la base de datos atratar 
 
 Consistencia.txt
@@ -21,6 +21,8 @@ Es un archivo de texto con reglas de consistencia para la base de datos
  54
  148
  154
+
+* Todos los show and view pueden ser intercambiados
 
 
 **NOTA SOBRE LA CALIDAD DE VIDA** 
