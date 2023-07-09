@@ -179,32 +179,34 @@ x11();ggplot(conformacion.muestra, aes(x="", y = porcentaje, fill = Reg)) +
 
 #2. Visualizacion de diferencias de los indicadores por grupo
 
-gg1 <- ggplot(Datos, aes(x= GRUPOS, y= Tasa.natalidad))+
-  geom_boxplot()+
+# Asignar colores a los boxplots
+gg1 <- ggplot(Datos, aes(x = GRUPOS, y = Tasa.natalidad)) +
+  geom_boxplot(fill = "red") +
   ggtitle(label = "Tasa de natalidad por grupos")
 
-gg2 <- ggplot(Datos, aes(x= GRUPOS, y= Tasa.mortalidad))+
-  geom_boxplot()+
+gg2 <- ggplot(Datos, aes(x = GRUPOS, y = Tasa.mortalidad)) +
+  geom_boxplot(fill = "blue") +
   ggtitle(label = "Tasa de mortalidad por grupos")
 
-gg3 <- ggplot(Datos, aes(x= GRUPOS, y= Mortalidad.infantil))+ 
-  geom_boxplot()+ 
+gg3 <- ggplot(Datos, aes(x = GRUPOS, y = Mortalidad.infantil)) +
+  geom_boxplot(fill = "gray") +
   ggtitle(label = "Mortalidad infantil por grupos")
 
-gg4 <- ggplot(Datos, aes(x= GRUPOS, y= Esperanza.vida.hombre))+ 
-  geom_boxplot()+ 
+gg4 <- ggplot(Datos, aes(x = GRUPOS, y = Esperanza.vida.hombre)) +
+  geom_boxplot(fill = "green") +
   ggtitle(label = "Esperanza de vida hombre por grupos")
 
-gg5 <- ggplot(Datos, aes(x= GRUPOS, y= Esperanza.vida.mujer))+ 
-  geom_boxplot()+ 
+gg5 <- ggplot(Datos, aes(x = GRUPOS, y = Esperanza.vida.mujer)) +
+  geom_boxplot(fill = "yellow") +
   ggtitle(label = "Esperanza de vida mujer por grupos")
 
-gg6 <- ggplot(Datos, aes(x= GRUPOS, y= PNB))+ 
-  geom_boxplot()+ 
+gg6 <- ggplot(Datos, aes(x = GRUPOS, y = PNB)) +
+  geom_boxplot(fill = "brown") +
   ggtitle(label = "PNB por grupos")
 
+# Mostrar los boxplots con colores
+x11(); ggarrange(gg1, gg2, gg3, gg4, gg5, gg6, ncol = 3, nrow = 3)
 
-x11();ggarrange(gg1, gg2, gg3, gg4, gg5, gg6, ncol = 3, nrow = 3)
 
 
 #3. Adicion de la columna PNB per capita
@@ -215,12 +217,13 @@ Datos <- dplyr::mutate(Datos,
 
 # Visualizacion de los datos PNB per capita por pais agrupado
 
-x11();ggplot(Datos, aes(x = Grupo, y = PNB.per.capita, fill = País))+
-  geom_col(position = "Dodge")+
-  scale_x_continuous(breaks = seq(1, 6, 1))+
-  scale_y_continuous(breaks = seq(0, 14000000, 500000))+
-  theme(legend.text = element_text(margin = margin(t= 10, b= 10)))+
-  scale_fill_discrete(name = "País (PNB per capita)",labels = paste(as.character(Datos$País), " (", as.character(Datos$PNB.per.capita), ")", sep = ""))
+x11(); ggplot(Datos, aes(x = factor(Grupo), y = PNB.per.capita, fill = País)) +
+  geom_col(position = "Dodge") +
+  scale_x_discrete(labels = paste("Grupo", unique(Datos$GRUPOS))) +
+  scale_y_continuous(breaks = seq(0, 14000000, 500000)) +
+  labs(x = "Grupo", y = "PNB per capita", fill = "País (PNB per capita)") +
+  theme(legend.text = element_text(margin = margin(t = 10, b = 10))) +
+  theme_minimal()
 
 #Muestra la nueva tabla
 # View(Datos)
@@ -253,13 +256,15 @@ Frecuencias.PNB.clas <- transform(Frecuencias.PNB.clas,
 
 # Visualizacion de la tabla de frecuencias
 
-pl <- ggplot(Frecuencias.PNB.clas, aes(Var1, Freq)) + 
+pl <- ggplot(Frecuencias.PNB.clas, aes(Var1, Freq, fill = Var1)) + 
   geom_bar(stat = "identity") +
-  labs(x= "Nivel de pobreza",
+  labs(x = "Nivel de pobreza",
        y = "Frecuencia absoluta",
-       title = "Visualizacion de la tabla de frecuencias")+
-  scale_y_continuous(breaks = c(1:30))
-x11();pl
+       title = "Visualizacion de la tabla de frecuencias") +
+  scale_y_continuous(breaks = c(1:30)) +
+  scale_fill_discrete(guide = FALSE);x11(); pl
+
+# Mostrar el gráfico con barras de colores independientes
 
 # Copiar la tabla de datos H1
 Datos_1 <- Datos
@@ -316,7 +321,7 @@ ggplot(Datos_3, aes(x = PNB.Capita.Clasificado, y = Mortalidad.infantil, fill = 
 #Por grupo de pais mostrar la natalidad y mortalidad * pnb
 # Gráfico de dispersión de Natalidad y PNB por grupo de país
 ggplot(data = Datos, aes(x = Tasa.natalidad, y = PNB.per.capita, color = GRUPOS)) +
-  geom_line() +
+  geom_point() +
   labs(x = "Natalidad", y = "PNB per cápita", color = "Grupo de país") +
   theme_minimal() +
   ggtitle("Gráfico de dispersión de Natalidad y PNB por grupo de país")
@@ -344,23 +349,25 @@ ggplot(data = Datos, aes(x = GRUPOS)) +
   theme_minimal() +
   ylim(0, 100)
 
+################# PARA ESTOS GRAFICOS PRESIONAR EL BOTON DE ZOOM PARA UNA MEJOR PREV ##########################################
 
 # Gráfico de dispersión de Tasa de Natalidad vs Tasa de Mortalidad
-ggplot(data = Datos, aes(x = Tasa.natalidad, y = Tasa.mortalidad)) +
+ggplot(data = Datos, aes(x = Tasa.natalidad, y = Tasa.mortalidad, color = País)) +
   geom_point() +
-  labs(x = "Tasa de Natalidad", y = "Tasa de Mortalidad") +
+  labs(x = "Tasa de Natalidad", y = "Tasa de Mortalidad", color = "País") +
   theme_minimal()
 
 # Gráfico de dispersión de Mortalidad Infantil vs Tasa de Mortalidad
-ggplot(data = Datos_1, aes(x = Mortalidad.infantil, y = Tasa.mortalidad)) +
+ggplot(data = Datos_1, aes(x = Mortalidad.infantil, y = Tasa.mortalidad, color = País)) +
   geom_point() +
-  labs(x = "Mortalidad Infantil", y = "Tasa de Mortalidad") +
+  labs(x = "Mortalidad Infantil", y = "Tasa de Mortalidad", color = "País") +
   theme_minimal()
 
+
 # Gráfico de dispersión de Mortalidad Infantil vs Población en miles
-ggplot(data = Datos_1, aes(x = Mortalidad.infantil, y = Población..miles.)) +
+ggplot(data = Datos_1, aes(x = Mortalidad.infantil, y = Población..miles., color = País)) +
   geom_point() +
-  labs(x = "Mortalidad Infantil", y = "Población (miles)") +
+  labs(x = "Mortalidad Infantil", y = "Población (miles)", color = "País") +
   theme_minimal()
 
 # Calcular el promedio por grupos clasificados
@@ -383,10 +390,15 @@ mejorPais <- Datos$País[which.max(Datos$CalidadVida)]
 print(paste("El país con mejor calidad de vida es:", mejorPais))
 
 # Crear un gráfico de barras de la diferencia de calidad de vida por país
-barplot(Datos$CalidadVida, names.arg = Datos_1$País, xlab = "País", ylab = "Diferencia de calidad de vida",
-        main = "Diferencia de calidad de vida por país") +
-  theme_minimal()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+colores <- rainbow(length(Datos$CalidadVida))
+
+# Crear el gráfico de barras con colores individuales
+barplot(Datos$CalidadVida, xlab = "País", ylab = "Diferencia de calidad de vida",
+        main = "Diferencia de calidad de vida por país", names.arg = rep("", length(Datos$CalidadVida)),
+        col = colores, ylim = c(-5, 45)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  + text(x = 1:length(Datos$CalidadVida), y = Datos$CalidadVida, labels = Datos_1$País, pos = 3, cex = 0.7)
+
 
 # Calcular el intervalo de confianza para PNB.per.capita
 result <- t.test(Datos$PNB.per.capita)
