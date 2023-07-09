@@ -39,10 +39,10 @@ summary(Datos) # Retificacion de los valores de las variables
 
 # Carga del archivo de reglas de validación
 Rules <- editrules::editfile("Consistencia.txt") 
-Rules 
+Rules
 
 # Visualización de las reglas de validación
-windows();plot(Rules) # significa que no hay violaciones de las reglas de validación
+# windows();plot(Rules) # significa que no hay violaciones de las reglas de validación
 
 # Verificación de las reglas sobres los datos  Esta parte se puede omitir ya que no hay violaciones de las reglas de validación
 # es mas por estética *-* 
@@ -51,7 +51,7 @@ Valid_Data = editrules::violatedEdits(Rules, Datos)
 summary(Valid_Data)
 
 # Visualización del diagnóstico
-windows();plot(Valid_Data)
+# windows();plot(Valid_Data)
 
 # FIN DEL APARTADO DE VALIDACION DE LAS REGLAS DE CONSISTENCIA DE LOS DATOS QUE PUEDES OMITIR
 
@@ -60,11 +60,11 @@ windows();plot(Valid_Data)
 # EN ESTE APARTADO SE ENCUENTRA LAS FUNCION QUE PERMITE IDENTIFICAR LOS DATOS FALTANTES EN LA BASE DE DATOS
 
 # Identificion los datos NA o faltantes
-View(Datos) # Visualización de los datos
+# View(Datos) # Visualización de los datos
 is.na(Datos) # Identificación de los datos NA o faltantes y los muestra como TRUE o FALSE
 
 # Visualizacion de los datos
-x11();visdat::vis_miss(Datos) # Abre una ventana para visualizar los datos faltantes
+# x11();visdat::vis_miss(Datos) # Abre una ventana para visualizar los datos faltantes
 #visdat::vis_miss(Datos) # Visualización de los datos faltantes en la base de datos en forma de gráfica de barras
 
 # Función que evalua e identifica los datos faltantes por variable e individuo.
@@ -104,7 +104,7 @@ miss<-function(Datos,plot=T){
   return(invisible(lista))
 }
 
-Summary.NA = miss(Datos) # Asignacion de la funcion a una lista
+# Summary.NA = miss(Datos) # Asignacion de la funcion a una lista
  
 attach(Datos)  # Permite acceder a las variables de la base de datos sin necesidad de escribir el nombre de la base de datos
 
@@ -144,14 +144,16 @@ Visualizar.AQ= function(Datos){   #Una función para visualizar los datos AQ
   pairs(Datos.cuant,lower.panel = panel.smooth, pch = 15) # Visualiza la matriz de correlación
 }
 
-## Visualización.
-Visualizar.AQ(Datos)  # Visualiza los datos AQ
+# Visualización.
+# Visualizar.AQ(Datos)  # Visualiza los datos AQ
 
 
 ## Imputación por regresion.
 ImputR = mice::mice(Datos, maxit = 1,seed = 2018,print=F) # Imputación por regresión
 Datos = mice::complete(ImputR) # Asigna los datos imputados a la base de datos original
-Visualizar.AQ(Datos) # Visualiza los datos AQ imputados
+# Visualizar.AQ(Datos) # Visualiza los datos AQ imputados
+
+View(Datos) # DATOS COMPLETOS
 
 
 #1. Visualizacion de Conformacion de la muestra
@@ -189,7 +191,20 @@ gg3 <- ggplot(Datos, aes(x= GRUPOS, y= Mortalidad.infantil))+
   geom_boxplot()+ 
   ggtitle(label = "Mortalidad infantil por grupos")
 
-x11();ggarrange(gg1, gg2, gg3, nrow = 3)
+gg4 <- ggplot(Datos, aes(x= GRUPOS, y= Esperanza.vida.hombre))+ 
+  geom_boxplot()+ 
+  ggtitle(label = "Esperanza de vida hombre por grupos")
+
+gg5 <- ggplot(Datos, aes(x= GRUPOS, y= Esperanza.vida.mujer))+ 
+  geom_boxplot()+ 
+  ggtitle(label = "Esperanza de vida mujer por grupos")
+
+gg6 <- ggplot(Datos, aes(x= GRUPOS, y= PNB))+ 
+  geom_boxplot()+ 
+  ggtitle(label = "PNB por grupos")
+
+
+x11();ggarrange(gg1, gg2, gg3, gg4, gg5, gg6, ncol = 3, nrow = 3)
 
 
 #3. Adicion de la columna PNB per capita
@@ -208,7 +223,7 @@ x11();ggplot(Datos, aes(x = Grupo, y = PNB.per.capita, fill = País))+
   scale_fill_discrete(name = "País (PNB per capita)",labels = paste(as.character(Datos$País), " (", as.character(Datos$PNB.per.capita), ")", sep = ""))
 
 #Muestra la nueva tabla
-View(Datos)
+# View(Datos)
 
 #4. Adicion de la clasificacion del PNB per capita
 
@@ -244,8 +259,7 @@ pl <- ggplot(Frecuencias.PNB.clas, aes(Var1, Freq)) +
        y = "Frecuencia absoluta",
        title = "Visualizacion de la tabla de frecuencias")+
   scale_y_continuous(breaks = c(1:30))
-x11()
-pl
+x11();pl
 
 # Copiar la tabla de datos H1
 Datos_1 <- Datos
@@ -309,18 +323,27 @@ ggplot(data = Datos, aes(x = Tasa.natalidad, y = PNB.per.capita, color = GRUPOS)
 
 # Gráfico de dispersión de Mortalidad y PNB por grupo de país
 ggplot(data = Datos, aes(x = Tasa.mortalidad, y = PNB.per.capita, color = GRUPOS)) +
-  geom_line() +
+  geom_point() +
   labs(x = "Mortalidad", y = "PNB per cápita", color = "Grupo de país") +
   theme_minimal() +
   ggtitle("Gráfico de dispersión de Mortalidad y PNB por grupo de país")
 
-# Gráfico de barras apiladas de Esperanza de vida por grupo de país y género
+# Grafico de barras apiladas de esperanza de vida hommbres por grupo de pais
 ggplot(data = Datos, aes(x = GRUPOS)) +
   geom_bar(aes(y = Esperanza.vida.hombre, fill = "Hombres"), stat = "identity", width = 0.5) +
+  labs(x = "Grupo de país", y = "Esperanza de vida", fill = "Género") +
+  scale_fill_manual(values = c("Hombres" = "steelblue")) +
+  theme_minimal() +
+  ylim(0, 100)
+
+# Grafico de barras apiladas de esperanza de vida mujeres por grupo de pais
+ggplot(data = Datos, aes(x = GRUPOS)) +
   geom_bar(aes(y = Esperanza.vida.mujer, fill = "Mujeres"), stat = "identity", width = 0.5) +
   labs(x = "Grupo de país", y = "Esperanza de vida", fill = "Género") +
-  scale_fill_manual(values = c("Hombres" = "steelblue", "Mujeres" = "pink")) +
-  theme_minimal()
+  scale_fill_manual(values = c("Mujeres" = "pink")) +
+  theme_minimal() +
+  ylim(0, 100)
+
 
 # Gráfico de dispersión de Tasa de Natalidad vs Tasa de Mortalidad
 ggplot(data = Datos, aes(x = Tasa.natalidad, y = Tasa.mortalidad)) +
