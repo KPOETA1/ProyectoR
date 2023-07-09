@@ -423,6 +423,23 @@ barplot(Datos$CalidadVida, xlab = "País", ylab = "Diferencia de calidad de vida
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))  + text(x = 1:length(Datos$CalidadVida), y = Datos$CalidadVida, labels = Datos_1$País, pos = 3, cex = 0.7)
 
+# Grafica Esperanza.vida.hombre, Esperanza.vida.mujer vs Tasa.Mortalida filtrada por grupo de pais == AFRICA
+datos_filtrados <- subset(Datos, GRUPOS == "AFRICA")
+
+ggplot(data = datos_filtrados, aes(x = Tasa.mortalidad, y = Esperanza.vida.hombre, color = País, shape = "Hombres")) +
+  geom_point() +
+  labs(x = "Tasa de Mortalidad", y = "Esperanza de vida hombres y mujeres", color = "País", shape = "") +
+  geom_point(aes(y = Esperanza.vida.mujer, shape = "Mujeres")) +
+  scale_shape_manual(values = c(16, 17)) +
+  theme_minimal()
+
+# TASA DE MORTALIDAD POR GRUPO DE PAIS filtrada AFRICA vs PNB.per.capita
+datos_filtrados <- subset(Datos, GRUPOS == "AFRICA")
+
+ggplot(data = datos_filtrados, aes(x = PNB.per.capita, y = Tasa.mortalidad, color = País)) +
+  geom_point() +
+  labs(x = "PNB.per.capita", y = "Tasa de Mortalidad", color = "País") +
+  theme_minimal()
 
 # Calcular el intervalo de confianza para PNB.per.capita
 result <- t.test(Datos$PNB.per.capita)
