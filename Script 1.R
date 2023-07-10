@@ -265,7 +265,6 @@ pl <- ggplot(Frecuencias.PNB.clas, aes(Var1, Freq, fill = Var1)) +
   scale_fill_discrete(guide = FALSE);x11(); pl
 
 ############### AREA DE HIPOTESIS #####################
-
 # Copiar la tabla de datos H1
 Datos_1 <- Datos
 # hipotesis 1: El PNB per capita promedio es diferente para los paises en diferentes regiones
@@ -314,7 +313,7 @@ show(mortalidad_max)
 mortalidad_min <- datos_3 %>% filter(Tasa.mortalidad == min(Tasa.mortalidad))
 show(mortalidad_min)
 
-# Hipotesis diferencia entre la tasa de mortalidad entre los paises con mayor y menor tasa de mortalidad
+# Hipotesis 3: diferencia entre la tasa de mortalidad entre los paises con mayor y menor tasa de mortalidad
 # H0: no hay una diferencia significativa entre los paises con mayor y menor tasa de mortalidad
 # H1: hay una diferencia significativa entre los paises con mayor y menor tasa de mortalidad
 
@@ -334,12 +333,19 @@ show(natalidad_max)
 natalidad_min <- datos_5 %>% filter(Tasa.natalidad == min(Tasa.natalidad))
 show(natalidad_min)
 
-# Hipotesis diferencia entre la tasa de natalidad entre los paises con mayor y menor tasa de natalidad
+# Hipotesis 4: diferencia entre la tasa de natalidad entre los paises con mayor y menor tasa de natalidad
 # H0: no hay una diferencia significativa entre los paises con mayor y menor tasa de natalidad
 # H1: hay una diferencia significativa entre los paises con mayor y menor tasa de natalidad
 
 # Toma la media de la tasa de natalidad del grupo de pais AFRICA y la compara con la media de la tasa de natalidad del grupo de pais EO_NA_JAPON_AUSTR_NZ EN un test de hipotesis
 t.test(datos_6$Tasa.natalidad[datos_6$GRUPOS == "AFRICA"], datos_6$Tasa.natalidad[datos_6$GRUPOS == "EO_NA_JAPON_AUSTR_NZ"], two.sided = TRUE, conf.level = 0.95)
+
+# hipositesis 5: la natalidad no depende de la mortalidad
+# H0: la natalidad no depende de la mortalidad
+# H1: la natalidad depende de la mortalidad
+# Se hace un test de correlacion entre la tasa de natalidad y la tasa de mortalidad
+cor.test(Datos$Tasa.natalidad, Datos$Tasa.mortalidad, method = "pearson", conf.level = 0.95)
+
 
 # TABLAS EXTRAS 
 #Por grupo de pais mostrar la natalidad y mortalidad * pnb

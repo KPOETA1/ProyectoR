@@ -18,6 +18,7 @@ Es un archivo de texto con reglas de consistencia para la base de datos.
 
 > NOTAS
  * El script genera graficos y datos adicionales que proveen mucha más informacion pero no se incluyeron en el informe por las limitaciones establecidas.
+ * Las pruebas de hipotesis se encuentran en el script mas no en el informe por las limitaciones establecidas.
 
 
 **Las graficas de visualicion de tratado de datos se encuentran comentadas**
@@ -36,3 +37,6 @@ si bien calcular la calidad de vida utilizando la diferencia entre la tasa de na
 ### Creado por
  - Geider Andres Montaño
  - Daniel Rosero Zemanate
+
+### Docente encargado
+ - ERIKA CANTOR 
