@@ -17,8 +17,8 @@ Es un archivo de excel que contiene la base de datos a tratar.
 Es un archivo de texto con reglas de consistencia para la base de datos.
 
 > NOTAS
- * El script genera graficos y datos adicionales que proveen mucha más informacion pero no se incluyeron en el informe por las limitaciones establecidas.
- * Las pruebas de hipotesis se encuentran en el script mas no en el informe por las limitaciones establecidas.
+ * El script genera graficos y datos adicionales que proveen mucha más informacion pero no se incluyeron en el informe por las limitaciones establecidas para la entrega.
+ * Las pruebas de hipotesis se encuentran en el script mas no en el informe por las limitaciones establecidas para la entrega.
 
 
 **Las graficas de visualicion de tratado de datos se encuentran comentadas**
