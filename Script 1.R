@@ -453,6 +453,8 @@ ggplot(data = datos_filtrados, aes(x = Población..miles., y = Tasa.mortalidad, 
 ggplot(data = datos_filtrados, aes(x = Tasa.natalidad, y = Tasa.mortalidad, color = País)) +
   geom_point() +
   labs(x = "Tasa de Natalidad", y = "Tasa de Mortalidad", color = "País") +
+  ylim(5, 25) +
+  xlim(30, 50) +
   theme_minimal()
 
 # Tasa.natalidad mas alta filtrada por grupo de pais == AFRICA VS PNB.per.capita
